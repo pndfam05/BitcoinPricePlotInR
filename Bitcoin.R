@@ -136,9 +136,9 @@ data <- select(raw,-unixtime)
 data <- mutate(data,value = price * amount)
 by_date <- group_by(data,date)
 daily <- summarise(by_date,count = n(),
-                   m_price <-  mean(price, na.rm = TRUE),
-                   m_amount <- mean(amount, na.rm = TRUE),
-                   m_value <-  mean(value, na.rm = TRUE))
+                   m_price = mean(price, na.rm = TRUE),
+                   m_amount = mean(amount, na.rm = TRUE),
+                   m_value = mean(value, na.rm = TRUE))
 
 names(daily) <- c("date","count","m_value","m_price","m_amount")
 # head(daily,2)
@@ -154,7 +154,9 @@ daily_ts <- xts(daily$m_value,order.by=daily$date)
 dygraph(daily_ts,ylab="US Dollars",
 main="Average Daily Purchase Price of a Bitcoin in USD") %>%
 dySeries("V1",label="Avg Price (USD)") %>%
-dyRangeSelector(dateWindow = c("2012-01-01","2016-07-25"))
+
+#Defaults to the current System Date
+dyRangeSelector(dateWindow = c("2012-01-01", as.character.Date(Sys.Date()) ))
 
 #   This series tells the story of bitcoin so far: a long slow start
 #   then a rocket ride to a high followed by a roller coaster ride down
